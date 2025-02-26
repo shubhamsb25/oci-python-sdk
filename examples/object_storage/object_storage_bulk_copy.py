@@ -62,6 +62,7 @@ parser.add_argument('-se', default="", dest='source_prefix_exclude', help='Sourc
 parser.add_argument('-db', default="", dest='destination_bucket', help='Destination Bucket Name')
 parser.add_argument('-dr', default="", dest='destination_region', help='Destination Region')
 parser.add_argument('-dn', default="", dest='destination_namespace', help='Destination Namespace (Default current connection)')
+parser.add_argument('-dp', default="", dest='destination_object_prefix', help='Destination Object prefix')
 parser.add_argument('-ig', action='store_true', default=False, dest='ignore_exist', help='Ignore Check if files exist at Destination')
 cmd = parser.parse_args()
 
@@ -103,6 +104,7 @@ source_prefix = cmd.source_prefix_include
 source_prefix_exclude = cmd.source_prefix_exclude
 destination_bucket = cmd.destination_bucket
 destination_region = cmd.destination_region
+destination_object_prefix = cmd.destination_object_prefix
 state_file = source_bucket + "." + destination_bucket + ".wrk"
 
 # Update Variables based on the parameters
@@ -401,7 +403,7 @@ def copy_object(src_ns, src_b, src_o, dst_ns, dst_r, dst_b, dst_o):
     copy_request.destination_namespace = dst_ns
     copy_request.destination_region = dst_r
     copy_request.destination_bucket = dst_b
-    copy_request.destination_object_name = dst_o
+    copy_request.destination_object_name = destination_object_prefix + "/" + dst_o
 
     return object_storage_client.copy_object(src_ns, src_b, copy_request)
 
